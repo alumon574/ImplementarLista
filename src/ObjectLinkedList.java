@@ -25,13 +25,30 @@ public class ObjectLinkedList {
 
     public void print() {
         Element currentElement = firstElement;
-        if (currentElement != null) {
-            while (currentElement.getNext() != null) {
-                System.out.println(currentElement);
-                currentElement = currentElement.getNext();
-            }
-    }
+        String cadena = "";
+        while (currentElement != null) {
+            if (currentElement.getNext() != null)
+                cadena += currentElement.getObject() + ",";
+
+            else cadena += currentElement.getObject();
+            currentElement = currentElement.getNext();
         }
+        System.out.println("[" + cadena + "]");
+    }
+
+//    @Override
+//    public String toString() {
+//        Element currentElement = firstElement;
+//        String cadena = "";
+//        while (currentElement != null) {
+//            if (currentElement.getNext() != null)
+//                cadena += currentElement.getObject() + ",";
+//
+//            else cadena += currentElement.getObject();
+//            currentElement = currentElement.getNext();
+//        }
+//        return cadena;
+//    }
 
     public boolean isEmpty() {
         return firstElement == null;
@@ -39,26 +56,26 @@ public class ObjectLinkedList {
 
     public void remove(Object obj) throws ObjectNotFoundException, EmptyListException {
         int indexOfObject = findIndexOf(obj);
-        if (indexOfObject<0) return;
-        Element targetElement=getElementAtPosition(indexOfObject);
+        if (indexOfObject < 0) return;
+        Element targetElement = getElementAtPosition(indexOfObject);
         Element nextElement = targetElement.getNext();
-        if (targetElement==firstElement)
-            firstElement=firstElement.getNext();
-        else{
-            Element previousElement = getElementAtPosition(indexOfObject-1);
+        if (targetElement == firstElement)
+            firstElement = firstElement.getNext();
+        else {
+            Element previousElement = getElementAtPosition(indexOfObject - 1);
             previousElement.setNext(nextElement);
         }
         targetElement.delete();
     }
 
     private int findIndexOf(Object obj) {
-        int index=-1;
+        int index = -1;
         Element currentElement = firstElement;
-        while (currentElement!=null){
+        while (currentElement != null) {
             index++;
-            if (currentElement.getObject()==obj)
+            if (currentElement.getObject() == obj)
                 break;
-            currentElement=currentElement.getNext();
+            currentElement = currentElement.getNext();
         }
         return index;
     }
@@ -83,12 +100,12 @@ public class ObjectLinkedList {
         return element.getObject();
     }
 
-    private Element getElementAtPosition(int i){
-        int target=0;
+    private Element getElementAtPosition(int i) {
+        int target = 0;
         Element currentElement = firstElement;
-        while (target!=i){
-            currentElement=currentElement.getNext();
-            i++;
+        while (target != i) {
+            currentElement = currentElement.getNext();
+            target++;
         }
         return currentElement;
     }
