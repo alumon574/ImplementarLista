@@ -4,6 +4,7 @@ public class ObjectLinkedList<T> {
     private Element<T> firstElement = null;
     private T t;
     private Element<T> prevElement = null;
+    private Element<T> lastElement = null;
 
 
     public ObjectLinkedList() {
@@ -31,15 +32,19 @@ public class ObjectLinkedList<T> {
     public void print() {
         Element<T> currentElement = firstElement;
         String cadena = "";
+        int length = cadena.length();
         while (currentElement != null) {
             if (currentElement.getNext() != null)
                 cadena += currentElement.getObject() + ",";
 
+            else if (currentElement.getObject()==null)
+                cadena.replace(cadena.charAt(length),"");
             else cadena += currentElement.getObject();
             currentElement = currentElement.getNext();
         }
         System.out.println("[" + cadena + "]");
     }
+
 
 //    @Override
 //    public String toString() {
@@ -63,19 +68,18 @@ public class ObjectLinkedList<T> {
         int indexOfObject = findIndexOf(t);
         if (indexOfObject < 0) return;
         Element<T> targetElement = getElementAtPosition(indexOfObject);
-        Element<T> nextElement = targetElement.getNext();
+        Element<T> nextElement;
+        if (t == getLastObject()) {
+            nextElement = null;
+        } else {
+            nextElement = targetElement.getNext();
+        }
         if (targetElement == firstElement) {
             firstElement = firstElement.getNext();
             firstElement.setPrev(prevElement);
         } else {
-            if (targetElement.getNext()==null){
-                prevElement = setPrevious(t);
-                targetElement.delete();
-                prevElement.setNext(null);
-            }else
             prevElement = setPrevious(t);
-            prevElement.setNext(nextElement);
-            nextElement.setPrev(prevElement);
+            lastElement = nextElement;
         }
         targetElement.delete();
     }
@@ -108,7 +112,7 @@ public class ObjectLinkedList<T> {
         return prevElement;
     }
 
-    public Object getLastObject() throws EmptyListException {
+    public Element<T> getLastObject() throws EmptyListException {
         Element<T> currentElement = firstElement;
         if (currentElement != null) {
             while (currentElement.getNext() != null) {
@@ -132,6 +136,12 @@ public class ObjectLinkedList<T> {
             target++;
         }
         return currentElement;
+    }
+
+    public Element<T> getLastElement() {
+        lastElement = getLastElement();
+        return lastElement;
+
     }
 
     private class Element<E> {

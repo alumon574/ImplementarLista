@@ -5,7 +5,7 @@ public class Main {
         Contact contacto3 = new Contact("pepe3");
         Contact contacto4 = new Contact("pepe4");
 
-        ObjectLinkedList objectLinkedList = new ObjectLinkedList();
+        ObjectLinkedList<Contact> objectLinkedList = new ObjectLinkedList<Contact>();
         objectLinkedList.insertFirst(contacto4);
         objectLinkedList.insertFirst(contacto3);
         objectLinkedList.insertFirst(contacto2);
