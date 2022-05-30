@@ -1,30 +1,35 @@
 import java.util.LinkedList;
 
-public class ObjectLinkedList {
-    private Element firstElement = null;
+public class ObjectLinkedList<T> {
+    private Element<T> firstElement = null;
+    private T t;
+    private Element<T> prevElement = null;
+
 
     public ObjectLinkedList() {
     }
 
-    public void insertFirst(Object obj) {
-        Element newElement = new Element(obj);
+    public void insertFirst(T t) {
+        Element<T> newElement = new Element<T>(t);
         newElement.setNext(firstElement);
         firstElement = newElement;
+        firstElement.setPrev(prevElement);
     }
 
-    public void insertLast(Object obj) {
-        Element lastElement = new Element(obj);
-        Element currentElement = firstElement;
+    public void insertLast(T t) {
+        Element<T> lastElement = new Element<T>(t);
+        Element<T> currentElement = firstElement;
         if (currentElement != null) {
             while (currentElement.getNext() != null) {
                 currentElement = currentElement.getNext();
             }
             currentElement.setNext(lastElement);
+            currentElement.setPrev(setPrevious(t));
         }
     }
 
     public void print() {
-        Element currentElement = firstElement;
+        Element<T> currentElement = firstElement;
         String cadena = "";
         while (currentElement != null) {
             if (currentElement.getNext() != null)
@@ -54,38 +59,57 @@ public class ObjectLinkedList {
         return firstElement == null;
     }
 
-    public void remove(Object obj) throws ObjectNotFoundException, EmptyListException {
-        int indexOfObject = findIndexOf(obj);
+    public void remove(T t) throws ObjectNotFoundException, EmptyListException {
+        int indexOfObject = findIndexOf(t);
         if (indexOfObject < 0) return;
-        Element targetElement = getElementAtPosition(indexOfObject);
-        Element nextElement = targetElement.getNext();
-        if (targetElement == firstElement)
+        Element<T> targetElement = getElementAtPosition(indexOfObject);
+        Element<T> nextElement = targetElement.getNext();
+        if (targetElement == firstElement) {
             firstElement = firstElement.getNext();
-        else {
-            Element previousElement = getElementAtPosition(indexOfObject - 1);
-            previousElement.setNext(nextElement);
+            firstElement.setPrev(prevElement);
+        } else {
+            if (targetElement.getNext()==null){
+                prevElement = setPrevious(t);
+                targetElement.delete();
+                prevElement.setNext(null);
+            }else
+            prevElement = setPrevious(t);
+            prevElement.setNext(nextElement);
+            nextElement.setPrev(prevElement);
         }
         targetElement.delete();
     }
 
-    private int findIndexOf(Object obj) {
+    private int findIndexOf(T t) {
         int index = -1;
-        Element currentElement = firstElement;
+        Element<T> currentElement = firstElement;
         while (currentElement != null) {
             index++;
-            if (currentElement.getObject() == obj)
+            if (currentElement.getObject() == t)
                 break;
             currentElement = currentElement.getNext();
         }
         return index;
     }
 
-    public Object getFirstObject() throws EmptyListException {
+    public Element<T> setPrevious(T t) {
+        int index = findIndexOf(t);
+        prevElement = getElementAtPosition(index - 1);
+        return prevElement;
+    }
+
+    public Element<T> getFirstObject() throws EmptyListException {
         return firstElement;
     }
 
+    public Element<T> getPrevElement(T t) {
+        int i = findIndexOf(t);
+        prevElement = getElementAtPosition(i - 1);
+        return prevElement;
+    }
+
     public Object getLastObject() throws EmptyListException {
-        Element currentElement = firstElement;
+        Element<T> currentElement = firstElement;
         if (currentElement != null) {
             while (currentElement.getNext() != null) {
                 currentElement = currentElement.getNext();
@@ -94,15 +118,15 @@ public class ObjectLinkedList {
         return currentElement;
     }
 
-    public Object getObjectAtPosition(int i) throws EmptyListException, InvalidIndexException {
-        Element element = getElementAtPosition(i);
+    public T getObjectAtPosition(int i) throws EmptyListException, InvalidIndexException {
+        Element<T> element = getElementAtPosition(i);
         if (element == null) return null;
         return element.getObject();
     }
 
-    private Element getElementAtPosition(int i) {
+    private Element<T> getElementAtPosition(int i) {
         int target = 0;
-        Element currentElement = firstElement;
+        Element<T> currentElement = firstElement;
         while (target != i) {
             currentElement = currentElement.getNext();
             target++;
@@ -110,33 +134,37 @@ public class ObjectLinkedList {
         return currentElement;
     }
 
-    private class Element {
+    private class Element<E> {
+        private E e;
+        Element<E> next = null;
+        Element<E> prev = null;
 
-        Object object = null;
-        Element next = null;
-
-        public Element(Object newObject) {
-            this.object = newObject;
+        public Element(E e) {
+            this.e = e;
         }
 
-        public void setNext(Element newNext) {
+        public void setNext(Element<E> newNext) {
             this.next = newNext;
         }
 
-        public Element getNext() {
+        public void setPrev(Element<E> prev) {
+            this.prev = prev;
+        }
+
+        public Element<E> getNext() {
             return next;
         }
 
-        public Object getObject() {
-            return object;
+        public E getObject() {
+            return e;
         }
 
-        public void setObject(Object newObject) {
-            object = newObject;
+        public void setObject(E newObject) {
+            e = newObject;
         }
 
         public void delete() {
-            object = null;
+            e = null;
             next = null;
         }
     }

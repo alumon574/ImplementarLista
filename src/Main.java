@@ -11,7 +11,7 @@ public class Main {
         objectLinkedList.insertFirst(contacto2);
         objectLinkedList.insertFirst(contacto1);
         objectLinkedList.print();
-        objectLinkedList.remove(contacto3);
+        objectLinkedList.remove(contacto4);
         objectLinkedList.print();
     }
 }
