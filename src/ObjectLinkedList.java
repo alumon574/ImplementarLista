@@ -32,13 +32,12 @@ public class ObjectLinkedList<T> {
     public void print() {
         Element<T> currentElement = firstElement;
         String cadena = "";
-        int length = cadena.length();
         while (currentElement != null) {
             if (currentElement.getNext() != null)
                 cadena += currentElement.getObject() + ",";
 
-            else if (currentElement.getObject()==null)
-                cadena.replace(cadena.charAt(length),"");
+            else if (currentElement.getObject() == null)
+                continue;
             else cadena += currentElement.getObject();
             currentElement = currentElement.getNext();
         }
@@ -65,21 +64,21 @@ public class ObjectLinkedList<T> {
     }
 
     public void remove(T t) throws ObjectNotFoundException, EmptyListException {
+        lastElement=getLastElement();
         int indexOfObject = findIndexOf(t);
         if (indexOfObject < 0) return;
         Element<T> targetElement = getElementAtPosition(indexOfObject);
-        Element<T> nextElement;
-        if (t == getLastObject()) {
-            nextElement = null;
-        } else {
-            nextElement = targetElement.getNext();
+        Element<T> nextElement = targetElement.getNext();
+        if (t == lastElement) {
+            lastElement = getElementAtPosition(indexOfObject - 1);
+            prevElement = getElementAtPosition(indexOfObject - 2);
+            remove(t);
+            lastElement.setPrev(prevElement);
+            lastElement.setNext(nextElement);
         }
         if (targetElement == firstElement) {
             firstElement = firstElement.getNext();
             firstElement.setPrev(prevElement);
-        } else {
-            prevElement = setPrevious(t);
-            lastElement = nextElement;
         }
         targetElement.delete();
     }
